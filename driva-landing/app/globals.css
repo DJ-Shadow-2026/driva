@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+/* Brand tokens (CLAUDE.md section 4). Fixed: do not add colors here. */
+:root {
+  --asphalt: #0c0d0f;
+  --tarmac: #16171a;
+  --graphite: #2a2c31;
+  --fog: #8c9097;
+  --chalk: #f3f1ec;
+  --signal: #ff6a00;
+  --signal-hot: #ff8a1f;
+  --founding-gold: #c9a45c;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-asphalt: var(--asphalt);
+  --color-tarmac: var(--tarmac);
+  --color-graphite: var(--graphite);
+  --color-fog: var(--fog);
+  --color-chalk: var(--chalk);
+  --color-signal: var(--signal);
+  --color-signal-hot: var(--signal-hot);
+  --color-founding: var(--founding-gold);
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale (desktop): 76 / 52 / 34 / 24 / 18 / 15 / 13. Mobile hero 44. */
+  --text-d1: 76px;
+  --text-d2: 52px;
+  --text-d3: 34px;
+  --text-d4: 24px;
+  --text-body-lg: 18px;
+  --text-body: 17px;
+  --text-sm: 15px;
+  --text-xs: 13px;
+
+  /* Radius hierarchy, see DESIGN_NOTES.md. */
+  --radius-phone: 44px;
+  --radius-screen: 34px;
+  --radius-story: 28px;
+  --radius-card: 20px;
+  --radius-thumb: 10px;
+  --radius-field: 12px;
+  --radius-tag: 6px;
+
+  --container-page: 1200px;
+}
+
+html {
+  background: var(--asphalt);
+  scroll-padding-top: 88px;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--asphalt);
+  color: var(--chalk);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.55;
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@media (min-width: 1024px) {
+  body {
+    font-size: 18px;
+  }
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--asphalt);
+}
+
+/* Visible keyboard focus: 2px signal ring, 2px offset. */
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+/* Type roles (CLAUDE.md section 5). */
+@utility type-display {
+  /* Display: Archivo extended. The personality of the page. */
+  font-variation-settings: "wdth" 125;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+@utility type-data {
+  /* Data and stats: semi-extended, tabular so digits never jitter. */
+  font-variation-settings: "wdth" 112;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+@utility type-point {
+  /* Point titles inside lists. */
+  font-variation-settings: "wdth" 112;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+@utility type-body {
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+
+@utility h1 {
+  @apply type-display text-[clamp(36px,11vw,44px)] md:text-[60px] lg:text-d1;
+  line-height: 0.98;
+}
+
+@utility h2 {
+  @apply type-display text-[32px] md:text-[40px] lg:text-d2;
+  line-height: 1.04;
+}
+
+@utility h3 {
+  @apply type-display text-d4;
+  line-height: 1.15;
+}
+
+@utility btn-primary {
+  @apply inline-flex h-12 items-center justify-center rounded-full bg-signal px-6 text-[16px] font-semibold whitespace-nowrap text-asphalt;
+  font-variation-settings: "wdth" 112;
+  transition: background-color 160ms ease;
+  &:hover {
+    background: var(--signal-hot);
+  }
+}
+
+@utility page-x {
+  @apply mx-auto w-full max-w-page px-4 md:px-8;
+}
+
+@utility section-y {
+  @apply py-24 lg:py-36;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Hero page-load sequence: headline, then phone, then route glow. Under 1.2s. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Transform only: the headline is painted at first paint, so it never delays LCP. */
+  .load-headline {
+    animation: settle 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .load-phone {
+    animation: rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 260ms both;
+  }
+  .load-glow {
+    animation: glow-in 600ms ease-out 560ms both;
+  }
+  .load-glow-path {
+    stroke-dasharray: 1;
+    animation: draw 640ms cubic-bezier(0.4, 0, 0.2, 1) 520ms both;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes glow-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
